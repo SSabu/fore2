@@ -10,7 +10,7 @@ slider();
 
 var maricopa = myMap.createPane("maricopa_county");
 
-maricopa.style.opacity = 0.85;
+maricopa.style.opacity = 0.7;
 
 var styleObject = {
   tracts: {
@@ -383,7 +383,6 @@ featureGeo00.on("click", function(evt) {
 });
 
 featureGeo01.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAME00;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -406,7 +405,6 @@ featureGeo01.on("click", function(evt) {
 });
 
 featureGeo02.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAME00;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -451,7 +449,6 @@ featureGeo03.on("click", function(evt) {
 });
 
 featureGeo04.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAME00;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -474,7 +471,6 @@ featureGeo04.on("click", function(evt) {
 });
 
 featureGeo05.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAME00;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -497,7 +493,6 @@ featureGeo05.on("click", function(evt) {
 });
 
 featureGeo06.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAME00;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -520,7 +515,6 @@ featureGeo06.on("click", function(evt) {
 });
 
 featureGeo07.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAME00;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -543,7 +537,6 @@ featureGeo07.on("click", function(evt) {
 });
 
 featureGeo08.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAME00;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -566,7 +559,6 @@ featureGeo08.on("click", function(evt) {
 });
 
 featureGeo09.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAME00;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -590,7 +582,6 @@ featureGeo09.on("click", function(evt) {
 });
 
 featureGeo10.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAMELSAD10;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -635,7 +626,6 @@ featureGeo11.on("click", function(evt) {
 });
 
 featureGeo12.bindPopup(function(layer) {
-  console.log(layer);
   let name = layer.feature.properties.NAMELSAD;
   let rate = layer.feature.properties.rate_prcnt;
   let jc = layer.feature.properties.Join_Count;
@@ -833,9 +823,33 @@ featureGeo20.on("click", function(evt) {
 
 });
 
-myMap.on("click", function() {
-  myMap.setView([33.2818, -112.2291], 9);
-});
+var chartData = [{"year": 1996, "count": 8},
+                 {"year": 1997, "count": 19},
+                 {"year": 1998, "count": 16},
+                 {"year": 1999, "count": 52},
+                 {"year": 2000, "count": 249},
+                 {"year": 2001, "count": 1996},
+                 {"year": 2002, "count": 4860},
+                 {"year": 2003, "count": 5101},
+                 {"year": 2004, "count": 3090},
+                 {"year": 2005, "count": 705},
+                 {"year": 2006, "count": 2793},
+                 {"year": 2007, "count": 18216},
+                 {"year": 2008, "count": 51851},
+                 {"year": 2009, "count": 58412},
+                 {"year": 2010, "count": 49190},
+                 {"year": 2011, "count": 29727},
+                 {"year": 2012, "count": 18825},
+                 {"year": 2013, "count": 7483},
+                 {"year": 2014, "count": 4985},
+                 {"year": 2015, "count": 3917},
+                 {"year": 2016, "count": 2974},
+                 {"year": 2017, "count": 2194},
+                 {"year": 2018, "count": 1506},
+                 {"year": 2019, "count": 1127},
+                 {"year": 2020, "count": 90}];
+
+legend();
 
 function slider() {
 
@@ -894,9 +908,614 @@ function slider() {
 
   gTime.call(sliderTime);
 
+  var myTimer;
+
+  var year = 1996;
+
+  chartData.forEach(function(data){ if (data['year'] == 1996) { d3.select("#year-display").text("Year: 1996, Foreclosure Count: "+formatComma(data['count'])+" reflecting 80.0% of total records" ); }});
+
+  d3.select("#play").on("click", function() {
+
+     myTimer = setInterval(function() {
+       sliderTime.value(++year);
+
+       player(year);
+
+       if (year === 2020) {
+         clearInterval(myTimer);
+       }
+     }, 3000);
+   });
+
+   d3.select("#stop").on("click", function() {
+     clearInterval(myTimer);
+   });
+
+   d3.select("#reload").on("click", function() {
+
+     var currYear = sliderTime.value();
+
+     sliderTime.value(1996);
+
+     year = 1996;
+
+     myMap.eachLayer(function (layer) {
+          if (layer.options.id !== "mapbox/light-v10") {
+            myMap.removeLayer(layer);
+          }
+     });
+
+     geo1996.addTo(myMap);
+     featureGeo96.addTo(myMap);
+
+     // d3.select("#id_2014").attr("stroke","#a2b5e0").attr("stroke-width", 3.5);
+     // d3.select("#id_2015").attr("stroke","").attr("stroke-width", 0);
+     // d3.select("#id_2016").attr("stroke","").attr("stroke-width", 0);
+     // d3.select("#id_2017").attr("stroke","").attr("stroke-width", 0);
+     // d3.select("#id_2018").attr("stroke","").attr("stroke-width", 0);
+     // d3.select("#id_2019").attr("stroke","").attr("stroke-width", 0);
+     // d3.select("#id_2020").attr("stroke","").attr("stroke-width", 0);
+     //
+     // chartData1.forEach(function(data){ if (data['year'] == 2014) { d3.select("#year_display").text("Year: 2014, Eviction Count: "+formatComma(data['count']) +" reflecting 71.7% of total records" ); }});
+
+   });
+
+   d3.select("#right-arrow").on("click", function() {
+     var currYrRt = sliderTime.value();
+     sliderTime.value(++currYrRt);
+
+     player(currYrRt);
+
+   });
+
+   d3.select("#left-arrow").on("click", function() {
+     var currYrLft = sliderTime.value();
+     sliderTime.value(--currYrLft);
+
+     player(currYrLft);
+
+   });
+
+
+
 }
 
 function player(time) {
+
+  var formatComma = d3.format(",");
+
+  // var chartData = [{"year": 1996, "count": 8},
+  //                  {"year": 1997, "count": 19},
+  //                  {"year": 1998, "count": 16},
+  //                  {"year": 1999, "count": 52},
+  //                  {"year": 2000, "count": 249},
+  //                  {"year": 2001, "count": 1996},
+  //                  {"year": 2002, "count": 4860},
+  //                  {"year": 2003, "count": 5101},
+  //                  {"year": 2004, "count": 3090},
+  //                  {"year": 2005, "count": 705},
+  //                  {"year": 2006, "count": 2793},
+  //                  {"year": 2007, "count": 18216},
+  //                  {"year": 2008, "count": 51851},
+  //                  {"year": 2009, "count": 58412},
+  //                  {"year": 2010, "count": 49190},
+  //                  {"year": 2011, "count": 29727},
+  //                  {"year": 2012, "count": 18825},
+  //                  {"year": 2013, "count": 7483},
+  //                  {"year": 2014, "count": 4985},
+  //                  {"year": 2015, "count": 3917},
+  //                  {"year": 2016, "count": 2974},
+  //                  {"year": 2017, "count": 2194},
+  //                  {"year": 2018, "count": 1506},
+  //                  {"year": 2019, "count": 1127},
+  //                  {"year": 2020, "count": 90}];
+
+  switch(time) {
+    case 1996:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo1996.addTo(myMap);
+      featureGeo96.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo96.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 1996) { d3.select("#year-display").text("Year: 1996, Foreclosure Count: "+formatComma(data['count'])+" reflecting 80.0% of total records" ); }});
+
+    break;
+
+    case 1997:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo1997.addTo(myMap);
+      featureGeo97.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo97.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 1997) { d3.select("#year-display").text("Year: 1997, Foreclosure Count: "+formatComma(data['count'])+" reflecting 95.0% of total records" ); }});
+
+    break;
+
+    case 1998:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo1998.addTo(myMap);
+      featureGeo98.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo98.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 1998) { d3.select("#year-display").text("Year: 1998, Foreclosure Count: "+formatComma(data['count'])+" reflecting 88.9% of total records" ); }});
+
+    break;
+
+    case 1999:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo1999.addTo(myMap);
+      featureGeo99.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo99.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 1999) { d3.select("#year-display").text("Year: 1999, Foreclosure Count: "+formatComma(data['count'])+" reflecting 96.2% of total records" ); }});
+
+    break;
+
+    case 2000:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2000.addTo(myMap);
+      featureGeo00.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo00.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2000) { d3.select("#year-display").text("Year: 2000, Foreclosure Count: "+formatComma(data['count'])+" reflecting 98.4% of total records" ); }});
+
+    break;
+
+    case 2001:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2001.addTo(myMap);
+      featureGeo01.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo01.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2001) { d3.select("#year-display").text("Year: 2001, Foreclosure Count: "+formatComma(data['count'])+" reflecting 98.7% of total records" ); }});
+
+    break;
+
+    case 2002:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2002.addTo(myMap);
+      featureGeo02.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo02.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2002) { d3.select("#year-display").text("Year: 2002, Foreclosure Count: "+formatComma(data['count'])+" reflecting 98.9% of total records" ); }});
+
+    break;
+
+    case 2003:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2003.addTo(myMap);
+      featureGeo03.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo03.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2003) { d3.select("#year-display").text("Year: 2003, Foreclosure Count: "+formatComma(data['count'])+" reflecting 98.9% of total records" ); }});
+
+    break;
+
+    case 2004:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2004.addTo(myMap);
+      featureGeo04.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo04.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2004) { d3.select("#year-display").text("Year: 2004, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.0% of total records" ); }});
+
+    break;
+
+    case 2005:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2005.addTo(myMap);
+      featureGeo05.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo05.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2005) { d3.select("#year-display").text("Year: 2005, Foreclosure Count: "+formatComma(data['count'])+" reflecting 98.2% of total records" ); }});
+
+    break;
+
+    case 2006:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2006.addTo(myMap);
+      featureGeo06.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo06.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2006) { d3.select("#year-display").text("Year: 2006, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.2% of total records" ); }});
+
+    break;
+
+    case 2007:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2007.addTo(myMap);
+      featureGeo07.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo07.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2007) { d3.select("#year-display").text("Year: 2007, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.6% of total records" ); }});
+
+    break;
+
+    case 2008:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2008.addTo(myMap);
+      featureGeo08.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo08.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2008) { d3.select("#year-display").text("Year: 2008, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.6% of total records" ); }});
+
+    break;
+
+    case 2009:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2009.addTo(myMap);
+      featureGeo09.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo09.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2009) { d3.select("#year-display").text("Year: 2009, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.6% of total records" ); }});
+
+    break;
+
+    case 2010:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2010.addTo(myMap);
+      featureGeo10.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo10.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2010) { d3.select("#year-display").text("Year: 2010, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.9% of total records" ); }});
+
+    break;
+
+    case 2011:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2011.addTo(myMap);
+      featureGeo11.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo11.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2011) { d3.select("#year-display").text("Year: 2011, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.9% of total records" ); }});
+
+    break;
+
+    case 2012:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2012.addTo(myMap);
+      featureGeo12.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo12.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2012) { d3.select("#year-display").text("Year: 2012, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.9% of total records" ); }});
+
+    break;
+
+    case 2013:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2013.addTo(myMap);
+      featureGeo13.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo13.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2013) { d3.select("#year-display").text("Year: 2013, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.9% of total records" ); }});
+
+    break;
+
+    case 2014:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2014.addTo(myMap);
+      featureGeo14.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo14.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2014) { d3.select("#year-display").text("Year: 2014, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.9% of total records" ); }});
+
+    break;
+
+    case 2015:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2015.addTo(myMap);
+      featureGeo15.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo15.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2015) { d3.select("#year-display").text("Year: 2015, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.9% of total records" ); }});
+
+    break;
+
+    case 2016:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2016.addTo(myMap);
+      featureGeo16.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo16.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2016) { d3.select("#year-display").text("Year: 2016, Foreclosure Count: "+formatComma(data['count'])+" reflecting 99.9% of total records" ); }});
+
+    break;
+
+    case 2017:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2017.addTo(myMap);
+      featureGeo17.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo17.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2017) { d3.select("#year-display").text("Year: 2017, Foreclosure Count: "+formatComma(data['count'])+" reflecting 100% of total records" ); }});
+
+    break;
+
+    case 2018:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2018.addTo(myMap);
+      featureGeo18.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo18.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2018) { d3.select("#year-display").text("Year: 2018, Foreclosure Count: "+formatComma(data['count'])+" reflecting 100% of total records" ); }});
+
+    break;
+
+    case 2019:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2019.addTo(myMap);
+      featureGeo19.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo19.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2019) { d3.select("#year-display").text("Year: 2019, Foreclosure Count: "+formatComma(data['count'])+" reflecting 97% of total records" ); }});
+
+    break;
+
+    case 2020:
+
+      myMap.eachLayer(function (layer) {
+           if (layer.options.id !== "mapbox/light-v10") {
+             myMap.removeLayer(layer);
+           }
+      });
+
+      geo2020.addTo(myMap);
+      featureGeo20.addTo(myMap);
+
+      myMap.on("click", function() {
+        myMap.setView([33.2818, -112.2291], 9);
+        featureGeo20.setStyle(styleObject.geoFeature);
+      });
+
+      chartData.forEach(function(data){ if (data['year'] == 2020) { d3.select("#year-display").text("Year: 2020, Foreclosure Count: "+formatComma(data['count'])+" reflecting 89% of total records" ); }});
+
+    break;
+
+  }
+
+};
+
+function legend() {
 
   var formatComma = d3.format(",");
 
@@ -926,382 +1545,202 @@ function player(time) {
                    {"year": 2019, "count": 1127},
                    {"year": 2020, "count": 90}];
 
-  // map.eachLayer(function (layer) {
-  //      map.removeLayer(layer);
-  // });
+  var chartData1 = [{"year":2019,"count": 1127},
+                   {"year":2020,"count": 90}];
+
+  var chartMargin = {top: 20, right: 50, bottom: 20, left: 50},
+      chartWidth = 500 - chartMargin.left - chartMargin.right,
+      chartHeight = 200 - chartMargin.top - chartMargin.bottom;
+
+  let chartX = d3.scaleLinear().range([0,chartWidth]);
+  let chartY = d3.scaleLinear().range([chartHeight,0]);
+
+  let pathgenerator = d3.line()
+                       .defined(function(d) { return d.year !== 2020 })
+                       .x(function(d) { return chartX(d.year); })
+                       .y(function(d) { return chartY(d.count); });
+
+  let pathgenerator1 = d3.line()
+                         .x(function(d) { return chartX(d.year); })
+                         .y(function(d) { return chartY(d.count); });
+
+  let viz = d3.select("#visualization")
+              .append("svg")
+              .attr("width", chartWidth + chartMargin.left + chartMargin.right)
+              .attr("height", chartHeight + chartMargin.top + chartMargin.bottom)
+              .append("g")
+              .attr("stroke", 1)
+              .attr("transform","translate(" +(20+chartMargin.left) + "," + chartMargin.top + ")");
+
+  let div = d3.select("body").append("div")
+              .attr("class", "tooltip")
+              .style("opacity", 0);
+
+  chartX.domain(d3.extent(chartData, function(d) { return d.year; }));
+  chartY.domain([0, d3.max(chartData, function(d) { return d.count; })]);
+
+  viz.append("g").call(d3.axisLeft(chartY));
+
+  viz.append("path")
+     .data([chartData])
+     .attr("class","line")
+     .attr("d", pathgenerator)
+     .style("fill", "none")
+     .style("stroke", "black");
+
+  viz.selectAll("circle")
+     .data(chartData)
+     .enter()
+     .append("circle")
+     .attr("r", 4)
+     .attr("cx", function(d){return chartX(d.year); })
+     .attr("cy", function(d){return chartY(d.count); })
+     .attr("fill","steelblue")
+     .attr("id",function(d){ return "id_"+d.year; })
+     .on("mouseover", function(d) {
+             div.style("opacity", .9);
+             div.html("Count of Foreclosures: " + formatComma(d.count))
+     .style("left", (d3.event.pageX - 40) + "px")
+     .style("top", (d3.event.pageY - 50) + "px");
+     })
+     .on("mouseout", function(d) {
+            div.style("opacity", 0);
+     });
+
+  viz.append("path")
+     .data([chartData1])
+     .attr("class","line")
+     .attr("d", pathgenerator1)
+     .style("fill", "none")
+     .style("stroke", "black")
+     .style("stroke-dasharray", "4,4");
+
+  // viz.selectAll("circle")
+  //    .data(chartData1)
+  //    .enter()
+  //    .append("circle")
+  //    .attr("r",3)
+  //    .attr("cx", function(d){return chartX(d.year); })
+  //    .attr("cy", function(d){return chartY(d.count); })
+  //    .attr("fill","steelblue")
+  //    .attr("id",function(d){ return "id_"+d.year; })
+  //    .on("mouseover", function(d) {
+  //            div.style("opacity", .9);
+  //            div.html("Count of Foreclosures: " + formatComma(d.count))
+  //    .style("left", (d3.event.pageX - 200) + "px")
+  //    .style("top", (d3.event.pageY - 18) + "px");
+  //    })
+  //    .on("mouseout", function(d) {
+  //            div.style("opacity", 0);
+  //    });
+
+  let formatxAxis = d3.format('.0f');
+
+  viz.append("g")
+     .attr("transform", "translate(0," + chartHeight + ")")
+     .call(d3.axisBottom(chartX).ticks(5).tickFormat(formatxAxis));
+
+  // d3.select("#id_1996").attr("stroke","#a2b5e0").attr("stroke-width", 2.5);
+
+  var legendTitle = d3.select("#dot-legend").append("svg").attr("width", 200).attr("height",195).attr("border", 1).attr("transform", "translate(165,35)");
+
+  legendTitle.append("text")
+             .text("Rate of Foreclosures")
+             .attr("fill","black")
+             .attr("x", 15)
+             .attr("y", 25);
+
+  legendTitle.append("rect")
+             .attr("x",0)
+             .attr("y",0)
+             .attr("height", 185)
+             .attr("width", 200)
+             .attr("stroke","black")
+             .attr("fill","none")
+             .attr("stroke-width", 1);
+
+  legendTitle.append("circle")
+             .attr("cx", 62)
+             .attr("cy", 55)
+             .attr("r", 5)
+             .attr("stroke", "black")
+             .attr("fill", "#54278f");
+
+  legendTitle.append("text")
+             .attr("x", 72)
+             .attr("y", 57)
+             .text("25.51% - 58.97%")
+             .style("font-size", "13px")
+             .attr("alignment-baseline", "middle");
+
+  legendTitle.append("circle")
+             .attr("cx", 62)
+             .attr("cy", 75)
+             .attr("r", 5)
+             .attr("stroke", "black")
+             .attr("fill", "#756bb1");
+
+   legendTitle.append("text")
+              .attr("x", 72)
+              .attr("y", 77)
+              .text("16.01% - 25.50%")
+              .style("font-size", "13px")
+              .attr("alignment-baseline", "middle");
+
+   legendTitle.append("circle")
+              .attr("cx", 62)
+              .attr("cy", 95)
+              .attr("r", 5)
+              .attr("stroke", "black")
+              .attr("fill", "#a09cc9");
+
+   legendTitle.append("text")
+              .attr("x", 72)
+              .attr("y", 97)
+              .text("10.72% - 16.00%")
+              .style("font-size", "13px")
+              .attr("alignment-baseline", "middle");
+
+   legendTitle.append("circle")
+              .attr("cx", 62)
+              .attr("cy", 115)
+              .attr("r", 5)
+              .attr("stroke", "black")
+              .attr("fill", "#bfbddb");
+
+   legendTitle.append("text")
+              .attr("x", 72)
+              .attr("y", 119)
+              .text("6.80% - 10.71%")
+              .style("font-size", "13px");
+
+   legendTitle.append("circle")
+              .attr("cx", 62)
+              .attr("cy", 135)
+              .attr("r", 5)
+              .attr("stroke", "black")
+              .attr("fill", "#e2deed");
+
+    legendTitle.append("text")
+               .attr("x", 72)
+               .attr("y", 137)
+               .text("0.01% - 6.79%")
+               .style("font-size", "13px")
+               .attr("alignment-baseline", "middle");
+
+     legendTitle.append("circle")
+                .attr("cx", 62)
+                .attr("cy", 155)
+                .attr("r", 5)
+                .attr("stroke", "black")
+                .attr("fill", "#FFF");
+
+      legendTitle.append("text")
+                 .attr("x", 72)
+                 .attr("y", 157)
+                 .text("0%")
+                 .style("font-size", "13px")
+                 .attr("alignment-baseline", "middle");
 
-  switch(time) {
-    case 1996:
-
-      console.log("1996");
-
-      geo1997.removeFrom(myMap);
-      featureGeo97.removeFrom(myMap);
-
-      geo1996.addTo(myMap);
-      featureGeo96.addTo(myMap);
-
-    break;
-
-    case 1997:
-
-      console.log("1997");
-
-      geo1996.removeFrom(myMap);
-      featureGeo96.removeFrom(myMap);
-
-      geo1998.removeFrom(myMap);
-      featureGeo98.removeFrom(myMap);
-
-      geo1997.addTo(myMap);
-      featureGeo97.addTo(myMap);
-
-    break;
-
-    case 1998:
-
-      console.log("1998");
-
-      geo1997.removeFrom(myMap);
-      featureGeo97.removeFrom(myMap);
-
-      geo1999.removeFrom(myMap);
-      featureGeo99.removeFrom(myMap);
-
-      geo1998.addTo(myMap);
-      featureGeo98.addTo(myMap);
-
-    break;
-
-    case 1999:
-
-      console.log("1999");
-
-      geo2000.removeFrom(myMap);
-      featureGeo00.removeFrom(myMap);
-
-      geo1998.removeFrom(myMap);
-      featureGeo98.removeFrom(myMap);
-
-      geo1999.addTo(myMap);
-      featureGeo99.addTo(myMap);
-
-    break;
-
-    case 2000:
-
-      console.log("2000");
-
-      geo2001.removeFrom(myMap);
-      featureGeo01.removeFrom(myMap);
-
-      geo1999.removeFrom(myMap);
-      featureGeo99.removeFrom(myMap);
-
-      geo2000.addTo(myMap);
-      featureGeo00.addTo(myMap);
-
-    break;
-
-    case 2001:
-
-      console.log("2001");
-
-      geo2002.removeFrom(myMap);
-      featureGeo02.removeFrom(myMap);
-
-      geo2000.removeFrom(myMap);
-      featureGeo00.removeFrom(myMap);
-
-      geo2001.addTo(myMap);
-      featureGeo01.addTo(myMap);
-
-    break;
-
-    case 2002:
-
-      console.log("2002");
-
-      geo2001.removeFrom(myMap);
-      featureGeo01.removeFrom(myMap);
-
-      geo2003.removeFrom(myMap);
-      featureGeo03.removeFrom(myMap);
-
-      geo2002.addTo(myMap);
-      featureGeo02.addTo(myMap);
-
-    break;
-
-    case 2003:
-
-      console.log("2003");
-
-      geo2002.removeFrom(myMap);
-      featureGeo02.removeFrom(myMap);
-
-      geo2004.removeFrom(myMap);
-      featureGeo04.removeFrom(myMap);
-
-      geo2003.addTo(myMap);
-      featureGeo03.addTo(myMap);
-
-    break;
-
-    case 2004:
-
-      console.log("2004");
-
-      geo2003.removeFrom(myMap);
-      featureGeo03.removeFrom(myMap);
-
-      geo2005.removeFrom(myMap);
-      featureGeo05.removeFrom(myMap);
-
-      geo2004.addTo(myMap);
-      featureGeo04.addTo(myMap);
-
-    break;
-
-    case 2005:
-
-      console.log("2005");
-
-      geo2004.removeFrom(myMap);
-      featureGeo04.removeFrom(myMap);
-
-      geo2006.removeFrom(myMap);
-      featureGeo06.removeFrom(myMap);
-
-      geo2005.addTo(myMap);
-      featureGeo05.addTo(myMap);
-
-    break;
-
-    case 2006:
-
-      console.log("2006");
-
-      geo2005.removeFrom(myMap);
-      featureGeo05.removeFrom(myMap);
-
-      geo2007.removeFrom(myMap);
-      featureGeo07.removeFrom(myMap);
-
-      geo2006.addTo(myMap);
-      featureGeo06.addTo(myMap);
-
-    break;
-
-    case 2007:
-
-      console.log("2007");
-
-      geo2006.removeFrom(myMap);
-      featureGeo06.removeFrom(myMap);
-
-      geo2008.removeFrom(myMap);
-      featureGeo08.removeFrom(myMap);
-
-      geo2007.addTo(myMap);
-      featureGeo07.addTo(myMap);
-
-    break;
-
-    case 2008:
-
-      console.log("2008");
-
-      geo2007.removeFrom(myMap);
-      featureGeo07.removeFrom(myMap);
-
-      geo2009.removeFrom(myMap);
-      featureGeo09.removeFrom(myMap);
-
-      geo2008.addTo(myMap);
-      featureGeo08.addTo(myMap);
-
-    break;
-
-    case 2009:
-
-      console.log("2009");
-
-      geo2008.removeFrom(myMap);
-      featureGeo08.removeFrom(myMap);
-
-      geo2010.removeFrom(myMap);
-      featureGeo10.removeFrom(myMap);
-
-      geo2009.addTo(myMap);
-      featureGeo09.addTo(myMap);
-
-    break;
-
-    case 2010:
-
-      console.log("2010");
-
-      geo2011.removeFrom(myMap);
-      featureGeo11.removeFrom(myMap);
-
-      geo2009.removeFrom(myMap);
-      featureGeo09.removeFrom(myMap);
-
-      geo2010.addTo(myMap);
-      featureGeo10.addTo(myMap);
-
-    break;
-
-    case 2011:
-
-      console.log("2011");
-
-      geo2010.removeFrom(myMap);
-      featureGeo10.removeFrom(myMap);
-
-      geo2012.removeFrom(myMap);
-      featureGeo12.removeFrom(myMap);
-
-      geo2011.addTo(myMap);
-      featureGeo11.addTo(myMap);
-
-    break;
-
-    case 2012:
-
-      console.log("2012");
-
-      geo2013.removeFrom(myMap);
-      featureGeo13.removeFrom(myMap);
-
-      geo2011.removeFrom(myMap);
-      featureGeo11.removeFrom(myMap);
-
-      geo2012.addTo(myMap);
-      featureGeo12.addTo(myMap);
-
-    break;
-
-    case 2013:
-
-      console.log("2013");
-
-      geo2012.removeFrom(myMap);
-      featureGeo12.removeFrom(myMap);
-
-      geo2014.removeFrom(myMap);
-      featureGeo14.removeFrom(myMap);
-
-      geo2013.addTo(myMap);
-      featureGeo13.addTo(myMap);
-
-    break;
-
-    case 2014:
-
-      console.log("2014");
-
-      geo2013.removeFrom(myMap);
-      featureGeo13.removeFrom(myMap);
-
-      geo2015.removeFrom(myMap);
-      featureGeo15.removeFrom(myMap);
-
-      geo2014.addTo(myMap);
-      featureGeo14.addTo(myMap);
-
-    break;
-
-    case 2015:
-
-      console.log("2015");
-
-      geo2014.removeFrom(myMap);
-      featureGeo14.removeFrom(myMap);
-
-      geo2016.removeFrom(myMap);
-      featureGeo16.removeFrom(myMap);
-
-      geo2015.addTo(myMap);
-      featureGeo15.addTo(myMap);
-
-    break;
-
-    case 2016:
-
-      console.log("2016");
-
-      geo2017.removeFrom(myMap);
-      featureGeo17.removeFrom(myMap);
-
-      geo2015.removeFrom(myMap);
-      featureGeo15.removeFrom(myMap);
-
-      geo2016.addTo(myMap);
-      featureGeo16.addTo(myMap);
-
-    break;
-
-    case 2017:
-
-      console.log("2017");
-
-      geo2016.removeFrom(myMap);
-      featureGeo16.removeFrom(myMap);
-
-      geo2018.removeFrom(myMap);
-      featureGeo18.removeFrom(myMap);
-
-      geo2017.addTo(myMap);
-      featureGeo17.addTo(myMap);
-
-    break;
-
-    case 2018:
-
-      console.log("2018");
-
-      geo2017.removeFrom(myMap);
-      featureGeo17.removeFrom(myMap);
-
-      geo2019.removeFrom(myMap);
-      featureGeo19.removeFrom(myMap);
-
-      geo2018.addTo(myMap);
-      featureGeo18.addTo(myMap);
-
-    break;
-
-    case 2019:
-
-      console.log("2019");
-
-      geo2018.removeFrom(myMap);
-      featureGeo18.removeFrom(myMap);
-
-      geo2020.removeFrom(myMap);
-      featureGeo20.removeFrom(myMap);
-
-      geo2019.addTo(myMap);
-      featureGeo19.addTo(myMap);
-
-    break;
-
-    case 2020:
-
-
-      // geo1997.removeFrom(myMap);
-      // featureGeo97.removeFrom(myMap);
-
-      geo2019.removeFrom(myMap);
-      featureGeo19.removeFrom(myMap);
-
-      geo2020.addTo(myMap);
-      featureGeo20.addTo(myMap);
-
-    break;
-
-  }
 
 };

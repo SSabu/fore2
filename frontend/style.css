@@ -1,17 +1,23 @@
 #mapid {
-  height: 630px;
+  height: 620px;
   border: 1px solid black;
 }
 
 #legend {
-  width:34%;
+  width: 34%;
   float: right;
 }
 
 .rows {
   padding: 3px;
-  display: flex;
+  height: 90%;
 }
+
+/* #container {
+  position: fixed;
+  width: 100%;
+  padding-top: 630px;
+} */
 
 .middle {
   width: 66%;
@@ -25,14 +31,13 @@ div.tooltip {
   height: 45px;
   padding: 2px;
   font: 12px sans-serif;
-  background: steelblue;
+  background: lightgray;
   border: 0px;
   border-radius: 8px;
-  pointer-events: none;
 }
 
 #visualization {
-  padding-bottom: 25px
+  padding-bottom: 25px;
 }
 
 #disclaimer {
@@ -58,12 +63,16 @@ div.tooltip {
   width: 12%;
 }
 
+.row1 {
+  padding-left: 5px;
+}
+
 #year-display {
   background-color:lavender;
-  width: 625px;
+  width: 505px;
   height: 30px;
   padding-top: 3px;
-  padding-left: 12px;
+  padding-left: 10px;
 }
 
 #chart {
@@ -74,23 +83,11 @@ div.tooltip {
   padding-left: 5px;
 }
 
-#playerControls {
-  padding-top: 30px;
-}
-
 #display {
   height: 200px;
 }
 
-#playControls {
-  align-items: center;
-  justify-content: center;
-  width: 500px;
-}
-
 #controls {
-  align-items: center;
-  justify-content: center;
   float:left;
   padding: 20px;
 }
@@ -112,16 +109,11 @@ div.tooltip {
 }
 
 #value-time {
-  padding: 5px;
+  padding-top: 20px;
 }
 
 #yearSlider {
   padding-top: 20px;
-}
-
-#container {
-     align-items: center;
-     justify-content: center;
 }
 
 #play {

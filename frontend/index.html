@@ -26,6 +26,17 @@
       <div class="middle">
         <div id="mapid"></div>
       </div>
+      <div class="right" id="legend">
+        <div id="title">Rate of Foreclosures in Maricopa County, 1996 through 2020<strong>*</strong></div>
+        <div id="chart"><div id="chartTitle" align="center">Total Count of Foreclosures by Year</div>
+          <div id="visualization"></div>
+        </div>
+        <div class="row1">
+           <div id="year-display"></div>
+           <div id="note"><strong>*</strong>2020 data reflects foreclosures from Jan. - Aug. 2020.<br><strong>**</strong>Census tracts vary by decade according to geography changes defined by the U.S. Bureau of the Census.<br>Data from The Information Market and the U.S. Bureau of the Census.</div>
+        </div>
+        <div id="dot-legend"></div>
+      </div>
     </div>
     <div id="container">
       <div id="controls">
@@ -34,40 +45,14 @@
         <button id="reload">Reload</button>
       </div>
       <div id="yearSlider">
-          <div id="left-arrow"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M20 .755l-14.374 11.245 14.374 11.219-.619.781-15.381-12 15.391-12 .609.755z"/></svg></div>
-          <div id="time">
-            <div id="slider-time"></div>
-          </div>
-          <div id="right-arrow"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M4 .755l14.374 11.245-14.374 11.219.619.781 15.381-12-15.391-12-.609.755z"/></svg></div>
-          <p id="value-time"></p>
-      </div>
-    </div>
-
-      <div class="right" id="legend">
-
-        <div id="title"></div>
-
-        <div id="chart"><div id="chartTitle"></div>
-
-          <div id="visualization"></div>
-
-          <div class="container">
-
-            <!-- <div class="row">
-              <div id="year-display"></div>
-            </div> -->
-
-          </div>
-
+        <div id="left-arrow"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M20 .755l-14.374 11.245 14.374 11.219-.619.781-15.381-12 15.391-12 .609.755z"/></svg></div>
+        <div id="time">
+          <div id="slider-time"></div>
         </div>
-
-        <div id="dot-legend"></div>
-
-
-
+        <div id="right-arrow"><svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M4 .755l14.374 11.245-14.374 11.219.619.781 15.381-12-15.391-12-.609.755z"/></svg></div>
       </div>
-
-
+      <div id="value-time"></div>
+    </div>
     <script src="./script.js"></script>
   </body>
   </html>
