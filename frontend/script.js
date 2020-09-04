@@ -1290,7 +1290,6 @@ function player(time) {
 
     case 2020:
 
-      console.log("2020");
 
       // geo1997.removeFrom(myMap);
       // featureGeo97.removeFrom(myMap);
