@@ -1642,7 +1642,7 @@ function legend() {
 
   // d3.select("#id_1996").attr("stroke","#a2b5e0").attr("stroke-width", 2.5);
 
-  var legendTitle = d3.select("#dot-legend").append("svg").attr("width", 200).attr("height",195).attr("border", 1).attr("transform", "translate(165,35)");
+  var legendTitle = d3.select("#dot-legend").append("svg").attr("width", 200).attr("height",195).attr("border", 1).attr("transform", "translate(165,30)");
 
   legendTitle.append("text")
              .text("Rate of Foreclosures")
